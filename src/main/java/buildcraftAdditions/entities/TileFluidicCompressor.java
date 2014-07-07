@@ -11,7 +11,7 @@ package buildcraftAdditions.entities;
 import buildcraft.api.gates.IOverrideDefaultTriggers;
 import buildcraft.api.gates.ITrigger;
 import buildcraftAdditions.BuildcraftAdditions;
-import buildcraftAdditions.Inventories.CustomInventory;
+import buildcraftAdditions.inventories.CustomInventory;
 import io.netty.buffer.ByteBuf;
 
 import java.io.ByteArrayOutputStream;
@@ -40,13 +40,13 @@ import buildcraft.core.network.IGuiReturnHandler;
 import buildcraft.core.network.PacketGuiReturn;
 import buildcraft.core.network.PacketPayload;
 import buildcraft.core.network.PacketUpdate;
-import buildcraftAdditions.core.Utils;
+import buildcraftAdditions.utils.Utils;
 import buildcraftAdditions.items.ItemCanister;
 
 
 public class TileFluidicCompressor extends TileBuildCraft implements ISidedInventory, IFluidHandler, IGuiReturnHandler, IOverrideDefaultTriggers {
 
-    private final CustomInventory inventory = new CustomInventory("FluidicCompressor", 2, 1);
+    private final CustomInventory inventory = new CustomInventory("FluidicCompressor", 2, 1, this);
     public final int maxLiquid = FluidContainerRegistry.BUCKET_VOLUME * 10;
     @MjBattery(maxCapacity = 800.0, maxReceivedPerCycle = 100.0)
     public double energyStored = 0;
@@ -122,8 +122,7 @@ public class TileFluidicCompressor extends TileBuildCraft implements ISidedInven
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        NBTTagCompound p = (NBTTagCompound) nbtTagCompound.getTag("inventory");
-        inventory.readNBT(p);
+        inventory.readNBT(nbtTagCompound);
         tankManager.readFromNBT(nbtTagCompound);
         fill = nbtTagCompound.getBoolean("fill");
     }
@@ -131,9 +130,7 @@ public class TileFluidicCompressor extends TileBuildCraft implements ISidedInven
     @Override
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        NBTTagCompound inventoryTag = new NBTTagCompound();
-        inventory.writeNBT(inventoryTag);
-        nbtTagCompound.setTag("inventory", inventoryTag);
+        inventory.writeNBT(nbtTagCompound);
         tankManager.writeToNBT(nbtTagCompound);
         nbtTagCompound.setBoolean("fill", fill);
     }

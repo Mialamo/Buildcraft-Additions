@@ -1,10 +1,11 @@
-package buildcraftAdditions.Inventories;
+package buildcraftAdditions.inventories;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
 /**
@@ -19,11 +20,13 @@ public class CustomInventory implements IInventory {
     private final ItemStack[] itemStacks;
     private final String name;
     private final int stackLimit;
+    private TileEntity entity;
 
-    public CustomInventory(String name, int slots, int stackLimit){
+    public CustomInventory(String name, int slots, int stackLimit, TileEntity entity){
         this.name = name;
         this.stackLimit = stackLimit;
         itemStacks = new ItemStack[slots];
+        this.entity = entity;
     }
 
     public void readNBT(NBTTagCompound tag){
@@ -93,13 +96,17 @@ public class CustomInventory implements IInventory {
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
         itemStacks[slot] = stack;
+        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+            stack.stackSize = getInventoryStackLimit();
+        }
+        markDirty();
     }
 
     @Override
     public String getInventoryName() {
-       if (name != null)
-           return name;
-       return null;
+        if (name != null)
+            return name;
+        return null;
     }
 
     @Override
@@ -114,7 +121,7 @@ public class CustomInventory implements IInventory {
 
     @Override
     public void markDirty() {
-
+        entity.markDirty();
     }
 
     @Override

@@ -5,13 +5,10 @@ import buildcraft.api.fuels.IronEngineCoolant;
 import buildcraft.api.fuels.IronEngineFuel;
 import buildcraft.core.GuiIds;
 import buildcraft.core.IItemPipe;
-import buildcraft.core.fluids.FluidUtils;
-import buildcraft.core.inventory.InvUtils;
 import buildcraft.core.inventory.SimpleInventory;
 import buildcraft.energy.TileEngine;
-import buildcraft.energy.gui.ContainerEngine;
 import buildcraftAdditions.client.gui.ContainerAmplifiedEngine;
-import buildcraftAdditions.core.Utils;
+import buildcraftAdditions.utils.Utils;
 import buildcraftAdditions.items.ItemCanister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ICrafting;
@@ -219,9 +216,7 @@ public class TileAmplifiedEngine extends TileEngine implements IInventory {
     @Override
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
-        NBTTagCompound p = (NBTTagCompound) data.getTag("inventory");
-        inventory.readFromNBT(p);
-
+        inventory.readFromNBT(data);
         burnTime = data.getInteger("burnTime");
         penaltyCooling = data.getInteger("penaltyCooling");
 
@@ -230,10 +225,7 @@ public class TileAmplifiedEngine extends TileEngine implements IInventory {
     @Override
     public void writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
-        NBTTagCompound inventoryTag = new NBTTagCompound();
-        inventory.writeToNBT(inventoryTag);
-        data.setTag("inventory", inventoryTag);
-
+        inventory.writeToNBT(data);
         data.setInteger("burnTime", burnTime);
         data.setInteger("penaltyCooling", penaltyCooling);
 
